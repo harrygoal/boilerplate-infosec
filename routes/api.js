@@ -9,7 +9,7 @@ module.exports = function (app) {
 
     .post(async (req, res) => {
       const { text, delete_password } = req.body;
-      const hash = await bcrypt.hash(delete_password, 12);
+      const hash = await bcrypt.hash(delete_password, 1);
       const thread = {
         _id: new Date().getTime().toString(),
         text,
@@ -65,7 +65,7 @@ module.exports = function (app) {
       const { thread_id, text, delete_password } = req.body;
       const thread = db.find(t => t._id === thread_id);
       if (!thread) return res.status(404).send('thread not found');
-      const hash = await bcrypt.hash(delete_password, 12);
+      const hash = await bcrypt.hash(delete_password, 1);
       const reply = {
         _id: Date.now().toString() + Math.random().toString(36).slice(2),
         text,
