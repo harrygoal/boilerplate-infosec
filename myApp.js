@@ -1,50 +1,39 @@
-// myApp.js - Complete working code
+'use strict';
 const express = require("express");
 const app = express();
 const helmet = require("helmet");
 
+// CORS first - before everything
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 // Serve static files
 app.use(express.static("public"));
 
-// 1. Mount Helmet middleware (must be first)
+// Helmet middleware
 app.use(helmet());
-
-// 3. Set Content Security Policy
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "https://maxcdn.bootstrapcdn.com"],
-    },
-  }),
-);
-
-// 4. Set X-DNS-Prefetch-Control
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    styleSrc: ["'self'", "https://maxcdn.bootstrapcdn.com"],
+  },
+}));
 app.use(helmet.dnsPrefetchControl());
-
-// 5. Set X-Frame-Options
 app.use(helmet.frameguard({ action: "deny" }));
-
-// 6. Set X-XSS-Protection
 app.use(helmet.xssFilter());
-
-// 7. Set X-Content-Type-Options
 app.use(helmet.noSniff());
 
-// 8. Set Strict-Transport-Security
 const ninetyDaysInSeconds = 90 * 24 * 60 * 60;
-app.use(
-  helmet.hsts({
-    maxAge: ninetyDaysInSeconds,
-    force: true,
-  }),
-);
+app.use(helmet.hsts({ maxAge: ninetyDaysInSeconds, force: true }));
 
-// Body parsers — must be before routes
+// Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Route for the main page
+// Main page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
@@ -52,10 +41,16 @@ app.get("/", (req, res) => {
 // API routes
 require('./routes/api.js')(app);
 
-// Export app for testing
+// app-info route for freeCodeCamp verification
+app.get('/_api/app-info', (req, res) => {
+  var appStack = app._router.stack
+    .filter(s => s.name && s.name !== 'query' && s.name !== 'expressInit' && s.name !== 'serveStatic')
+    .map(s => s.name);
+  res.json({ headers: res.getHeaders(), appStack });
+});
+
 module.exports = app;
 
-// Start the server
 const port = process.env.PORT || 5000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Your app is listening on port ${port}`);
