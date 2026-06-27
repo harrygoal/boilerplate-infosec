@@ -1,27 +1,30 @@
 {
-	"name": "fcc-infosec-challenges",
-	"version": "0.0.1",
-	"description": "fcc backend boilerplate",
-	"main": "server.js",
-	"scripts": {
-		"start": "node myApp.js",
-		"test": "mocha tests/ --timeout 5000 --ui tdd"
-	},
-	"dependencies": {
-		"bcrypt": "^6.0.0",
-		"express": "^4.14.0",
-		"helmet": "3.21.3"
-	},
-	"devDependencies": {
-		"chai": "^4.5.0",
-		"chai-http": "^4.4.0",
-		"mocha": "^10.8.2"
-	},
-	"keywords": [
-		"node",
-		"hyperdev",
-		"express",
-		"freecodecamp"
-	],
-	"license": "MIT"
+  "name": "fcc-infosec-challenges",
+  "version": "0.0.1",
+  "description": "fcc backend boilerplate",
+  "main": "server.js",
+  "scripts": {
+    "start": "node myApp.js",
+    "test": "mocha tests/ --timeout 5000 --ui tdd"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^4.14.0",
+    "helmet": "3.21.3"
+  },
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.8.2"
+  },
+  "keywords": [
+    "node",
+    "hyperdev",
+    "express",
+    "freecodecamp"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": "20.x"
+  }
 }
