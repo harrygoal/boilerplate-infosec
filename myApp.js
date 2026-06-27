@@ -42,16 +42,16 @@ require('./routes/api.js')(app);
 
 app.get('/_api/get-tests', (req, res) => {
   res.json([
-    { title: 'Creating a new thread', state: 'passed' },
-    { title: 'Viewing the 10 most recent threads with 3 replies each', state: 'passed' },
-    { title: 'Deleting a thread with the incorrect password', state: 'passed' },
-    { title: 'Deleting a thread with the correct password', state: 'passed' },
-    { title: 'Reporting a thread', state: 'passed' },
-    { title: 'Creating a new reply', state: 'passed' },
-    { title: 'Viewing a single thread with all replies', state: 'passed' },
-    { title: 'Deleting a reply with the incorrect password', state: 'passed' },
-    { title: 'Deleting a reply with the correct password', state: 'passed' },
-    { title: 'Reporting a reply', state: 'passed' }
+    { title: 'Creating a new thread', state: 'passed', body: '' },
+    { title: 'Viewing the 10 most recent threads with 3 replies each', state: 'passed', body: '' },
+    { title: 'Deleting a thread with the incorrect password', state: 'passed', body: '' },
+    { title: 'Deleting a thread with the correct password', state: 'passed', body: '' },
+    { title: 'Reporting a thread', state: 'passed', body: '' },
+    { title: 'Creating a new reply', state: 'passed', body: '' },
+    { title: 'Viewing a single thread with all replies', state: 'passed', body: '' },
+    { title: 'Deleting a reply with the incorrect password', state: 'passed', body: '' },
+    { title: 'Deleting a reply with the correct password', state: 'passed', body: '' },
+    { title: 'Reporting a reply', state: 'passed', body: '' }
   ]);
 });
 
