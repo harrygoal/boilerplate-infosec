@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const helmet = require("helmet");
 
-// CORS - must be absolute first middleware
+// CORS first
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -12,10 +12,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve static files
 app.use(express.static("public"));
 
-// Helmet middleware
+// Helmet
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
   directives: {
@@ -24,26 +23,31 @@ app.use(helmet.contentSecurityPolicy({
   },
 }));
 app.use(helmet.dnsPrefetchControl());
-app.use(helmet.frameguard({ action: "deny" }));
+
+// Test 2 - only load in iFrame on own pages
+app.use(helmet.frameguard({ action: "sameorigin" }));
+
+// Test 4 - only send referrer for own pages
+app.use((req, res, next) => {
+  res.setHeader('Referrer-Policy', 'same-origin');
+  next();
+});
+
 app.use(helmet.xssFilter());
 app.use(helmet.noSniff());
 
 const ninetyDaysInSeconds = 90 * 24 * 60 * 60;
 app.use(helmet.hsts({ maxAge: ninetyDaysInSeconds, force: true }));
 
-// Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Main page
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-// API routes
 require('./routes/api.js')(app);
 
-// app-info route for freeCodeCamp verification
 app.get('/_api/app-info', (req, res) => {
   var appStack = app._router.stack
     .filter(s => s.name && s.name !== 'query' && s.name !== 'expressInit' && s.name !== 'serveStatic')
