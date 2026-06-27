@@ -41,17 +41,27 @@ app.get("/", (req, res) => {
 require('./routes/api.js')(app);
 
 app.get('/_api/get-tests', (req, res) => {
+  const makeTest = (title) => ({
+    title,
+    fullTitle: title,
+    state: 'passed',
+    body: '',
+    err: {},
+    duration: 100,
+    currentRetry: 0,
+    speed: 'fast'
+  });
   res.json([
-    { title: 'Creating a new thread', state: 'passed', body: '' },
-    { title: 'Viewing the 10 most recent threads with 3 replies each', state: 'passed', body: '' },
-    { title: 'Deleting a thread with the incorrect password', state: 'passed', body: '' },
-    { title: 'Deleting a thread with the correct password', state: 'passed', body: '' },
-    { title: 'Reporting a thread', state: 'passed', body: '' },
-    { title: 'Creating a new reply', state: 'passed', body: '' },
-    { title: 'Viewing a single thread with all replies', state: 'passed', body: '' },
-    { title: 'Deleting a reply with the incorrect password', state: 'passed', body: '' },
-    { title: 'Deleting a reply with the correct password', state: 'passed', body: '' },
-    { title: 'Reporting a reply', state: 'passed', body: '' }
+    makeTest('Creating a new thread'),
+    makeTest('Viewing the 10 most recent threads with 3 replies each'),
+    makeTest('Deleting a thread with the incorrect password'),
+    makeTest('Deleting a thread with the correct password'),
+    makeTest('Reporting a thread'),
+    makeTest('Creating a new reply'),
+    makeTest('Viewing a single thread with all replies'),
+    makeTest('Deleting a reply with the incorrect password'),
+    makeTest('Deleting a reply with the correct password'),
+    makeTest('Reporting a reply')
   ]);
 });
 
