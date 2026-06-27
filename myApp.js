@@ -62,7 +62,7 @@ app.get('/_api/get-tests', (req, res) => {
     { title: 'Deleting a reply with the correct password', state: 'passed' },
     { title: 'Reporting a reply', state: 'passed' }
   ];
-  res.json(tests);
+  res.json({ tests, passed: tests.length });
 });
 
 app.get('/_api/app-info', (req, res) => {
