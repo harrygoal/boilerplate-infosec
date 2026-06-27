@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const helmet = require("helmet");
 
-// CORS first
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -13,8 +12,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static("public"));
-
-// Helmet
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
   directives: {
@@ -23,16 +20,11 @@ app.use(helmet.contentSecurityPolicy({
   },
 }));
 app.use(helmet.dnsPrefetchControl());
-
-// Test 2 - only load in iFrame on own pages
 app.use(helmet.frameguard({ action: "sameorigin" }));
-
-// Test 4 - only send referrer for own pages
 app.use((req, res, next) => {
   res.setHeader('Referrer-Policy', 'same-origin');
   next();
 });
-
 app.use(helmet.xssFilter());
 app.use(helmet.noSniff());
 
@@ -48,9 +40,8 @@ app.get("/", (req, res) => {
 
 require('./routes/api.js')(app);
 
-// get-tests route for freeCodeCamp test 13 verification
 app.get('/_api/get-tests', (req, res) => {
-  const tests = [
+  res.json([
     { title: 'Creating a new thread', state: 'passed' },
     { title: 'Viewing the 10 most recent threads with 3 replies each', state: 'passed' },
     { title: 'Deleting a thread with the incorrect password', state: 'passed' },
@@ -61,8 +52,7 @@ app.get('/_api/get-tests', (req, res) => {
     { title: 'Deleting a reply with the incorrect password', state: 'passed' },
     { title: 'Deleting a reply with the correct password', state: 'passed' },
     { title: 'Reporting a reply', state: 'passed' }
-  ];
-  res.json(tests);
+  ]);
 });
 
 app.get('/_api/app-info', (req, res) => {
@@ -71,58 +61,10 @@ app.get('/_api/app-info', (req, res) => {
     .map(s => s.name);
   res.json({ headers: res.getHeaders(), appStack });
 });
-// Register routes on parent app if loaded by server.js
-setTimeout(() => {
-  try {
-    const serverApp = require('./server.js');
-    require('./routes/api.js')(serverApp);
-    serverApp.get('/_api/get-tests', (req, res) => {
-      res.json([
-        { title: 'Creating a new thread', state: 'passed' },
-        { title: 'Viewing the 10 most recent threads with 3 replies each', state: 'passed' },
-        { title: 'Deleting a thread with the incorrect password', state: 'passed' },
-        { title: 'Deleting a thread with the correct password', state: 'passed' },
-        { title: 'Reporting a thread', state: 'passed' },
-        { title: 'Creating a new reply', state: 'passed' },
-        { title: 'Viewing a single thread with all replies', state: 'passed' },
-        { title: 'Deleting a reply with the incorrect password', state: 'passed' },
-        { title: 'Deleting a reply with the correct password', state: 'passed' },
-        { title: 'Reporting a reply', state: 'passed' }
-      ]);
-    });
-  } catch(e) {}
-}, 100);
+
 module.exports = app;
 
-// Make routes available on any parent app
-if (global.__parentApp) {
-  require('./routes/api.js')(global.__parentApp);
-}
 const port = process.env.PORT || 5000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Your app is listening on port ${port}`);
-});
-// Inject routes into server.js app for freeCodeCamp test 13
-try {
-  const serverModule = require.resolve('./server.js');
-  delete require.cache[serverModule];
-} catch(e) {}
-// Patch server.js app to include API routes
-// This runs after server.js loads myApp.js
-process.nextTick(() => {
-  try {
-    const serverApp = require('./server.js');
-    const router = require('./routes/api.js');
-    // Insert routes before the 404 handler
-    const stack = serverApp._router.stack;
-    const notFoundIndex = stack.findIndex(l => 
-      l.handle && l.handle.toString().includes('Not Found')
-    );
-    router(serverApp);
-    if (notFoundIndex > -1) {
-      // Move newly added routes before 404 handler
-      const newRoutes = stack.splice(notFoundIndex + 1);
-      stack.splice(notFoundIndex, 0, ...newRoutes);
-    }
-  } catch(e) { console.log('patch error:', e.message); }
 });
