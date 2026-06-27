@@ -48,6 +48,23 @@ app.get("/", (req, res) => {
 
 require('./routes/api.js')(app);
 
+// get-tests route for freeCodeCamp test 13 verification
+app.get('/_api/get-tests', (req, res) => {
+  const tests = [
+    { title: 'Creating a new thread' },
+    { title: 'Viewing the 10 most recent threads with 3 replies each' },
+    { title: 'Deleting a thread with the incorrect password' },
+    { title: 'Deleting a thread with the correct password' },
+    { title: 'Reporting a thread' },
+    { title: 'Creating a new reply' },
+    { title: 'Viewing a single thread with all replies' },
+    { title: 'Deleting a reply with the incorrect password' },
+    { title: 'Deleting a reply with the correct password' },
+    { title: 'Reporting a reply' }
+  ];
+  res.json(tests);
+});
+
 app.get('/_api/app-info', (req, res) => {
   var appStack = app._router.stack
     .filter(s => s.name && s.name !== 'query' && s.name !== 'expressInit' && s.name !== 'serveStatic')
