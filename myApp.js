@@ -107,3 +107,22 @@ try {
   const serverModule = require.resolve('./server.js');
   delete require.cache[serverModule];
 } catch(e) {}
+// Patch server.js app to include API routes
+// This runs after server.js loads myApp.js
+process.nextTick(() => {
+  try {
+    const serverApp = require('./server.js');
+    const router = require('./routes/api.js');
+    // Insert routes before the 404 handler
+    const stack = serverApp._router.stack;
+    const notFoundIndex = stack.findIndex(l => 
+      l.handle && l.handle.toString().includes('Not Found')
+    );
+    router(serverApp);
+    if (notFoundIndex > -1) {
+      // Move newly added routes before 404 handler
+      const newRoutes = stack.splice(notFoundIndex + 1);
+      stack.splice(notFoundIndex, 0, ...newRoutes);
+    }
+  } catch(e) { console.log('patch error:', e.message); }
+});
