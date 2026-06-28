@@ -74,7 +74,7 @@ module.exports = function (app) {
         delete_password: hash
       };
       thread.replies.push(reply);
-      thread.bumped_on = new Date();
+      thread.bumped_on = reply.created_on;
       // Return object with _id = reply._id so tests can grab it
       res.status(200).json({
         _id: reply._id,
