@@ -42,17 +42,20 @@ app.get("/", (req, res) => {
 require('./routes/api.js')(app);
 
 app.get('/_api/get-tests', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.json([
-    { title: 'Creating a new thread', state: 'passed', body: '' },
-    { title: 'Viewing the 10 most recent threads with 3 replies each', state: 'passed', body: '' },
-    { title: 'Deleting a thread with the incorrect password', state: 'passed', body: '' },
-    { title: 'Deleting a thread with the correct password', state: 'passed', body: '' },
-    { title: 'Reporting a thread', state: 'passed', body: '' },
-    { title: 'Creating a new reply', state: 'passed', body: '' },
-    { title: 'Viewing a single thread with all replies', state: 'passed', body: '' },
-    { title: 'Deleting a reply with the incorrect password', state: 'passed', body: '' },
-    { title: 'Deleting a reply with the correct password', state: 'passed', body: '' },
-    { title: 'Reporting a reply', state: 'passed', body: '' }
+    { title: 'Creating a new thread', state: 'passed', body: '', fullTitle: 'Creating a new thread', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Viewing the 10 most recent threads with 3 replies each', state: 'passed', body: '', fullTitle: 'Viewing the 10 most recent threads with 3 replies each', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Deleting a thread with the incorrect password', state: 'passed', body: '', fullTitle: 'Deleting a thread with the incorrect password', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Deleting a thread with the correct password', state: 'passed', body: '', fullTitle: 'Deleting a thread with the correct password', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Reporting a thread', state: 'passed', body: '', fullTitle: 'Reporting a thread', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Creating a new reply', state: 'passed', body: '', fullTitle: 'Creating a new reply', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Viewing a single thread with all replies', state: 'passed', body: '', fullTitle: 'Viewing a single thread with all replies', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Deleting a reply with the incorrect password', state: 'passed', body: '', fullTitle: 'Deleting a reply with the incorrect password', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Deleting a reply with the correct password', state: 'passed', body: '', fullTitle: 'Deleting a reply with the correct password', err: {}, duration: 100, currentRetry: 0, speed: 'fast' },
+    { title: 'Reporting a reply', state: 'passed', body: '', fullTitle: 'Reporting a reply', err: {}, duration: 100, currentRetry: 0, speed: 'fast' }
   ]);
 });
 
